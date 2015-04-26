@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link href="webjars/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet"/>
+  <title>Inventár</title>
+</head>
+<body>
+   <div class="container-fluid">
+	<h2>Inventár</h2> <br/>
+	
+	<th:block th:if="${message != null}">
+	    <div class="col-md-6 alert alert-success" th:text="${message}">Info</div>
+	</th:block>
+	
+	<div class="col-md-9">
+	<form class="form-horizontal" th:action="@{/addItem}" method="post" th:object="${itemForm}">
+	  <div class="form-group" th:classappend="${#fields.hasErrors('name')}?'has-error'">
+	  	<label class="col-md-2 control-label" for="name">Názov</label>
+	  	<div class="col-md-5">
+	  	  <input class="form-control" id="name" th:field="*{name}" placeholder="2 - 30 znakov"/>
+	  	  <span class="help-block" th:errors="*{name}" style="margin-bottom:0px">Nesprávny názov</span>
+	  	</div>
+	  </div>
+	  <div class="form-group" th:classappend="${#fields.hasErrors('qty')}?'has-error'">
+	  	<label class="col-md-2 control-label" for="qty">Množstvo</label>
+	  	<div class="col-md-5">
+	  	  <input class="form-control" id="qty" th:field="*{qty}" placeholder="1 - 1000 kusov"/>
+	  	  <span class="help-block" th:errors="*{qty}" style="margin-bottom:0px">Nesprávne množstvo</span>
+	  	</div>
+	  </div>
+	  <div class="form-group" th:classappend="${#fields.hasErrors('price')}?'has-error'">
+	  	<label class="col-md-2 control-label" for="price" style="margin-bottom:0px">Cena</label>
+	  	<div class="col-md-5">
+	  	  <input class="form-control" id="price" th:field="*{price}" placeholder="0.01 - 9999.99 €"/>
+	  	  <span class="help-block" th:errors="*{price}" style="margin-bottom:0px">Nesprávna cena</span>
+	  	</div>
+	  </div>
+	  <div class="form-group">
+	  	<div class="col-md-offset-2 col-md-5">
+	      <button type="submit" class="btn btn-primary">Odošli</button>
+	    </div>
+	  </div>
+	</form>
+	</div> <br/>
+   
+    <th:block th:unless="${#lists.isEmpty(items)}">
+    <div class="col-md-6">
+	<table class="table table-hover">
+	  <thead>
+	  	<tr>
+	  	  <th></th>
+	  	  <th>Názov</th>
+	  	  <th>Množstvo</th>
+	  	  <th>Cena</th>
+	  	  <th>Vymaž</th>
+	  	</tr>
+	  </thead>
+	  <tbody>
+	    <tr th:each="item,stat : ${items}">
+	      <td th:text="${stat.count}+'.'">1.</td>
+	      <td th:text="${item.name}">Kniha</td>
+	      <td th:text="${item.qty}">15</td>
+	      <td th:text="${item.price}">12.39</td>
+	      <td>
+	        <a class="btn btn-sm btn-danger" href="#" th:href="@{/deleteItem/{id}(id=${item.id})}">
+	          <i class="glyphicon glyphicon-remove"></i>
+	        </a>
+	      </td>
+	    </tr>
+	  </tbody>
+    </table>
+    </div> <!-- col-md-6 -->
+    </th:block>
+    
+    <th:block th:if="${#lists.isEmpty(items)}">
+      <div class="col-md-6 alert alert-info">V inventári sa nenachádzajú žiadne položky.</div>
+    </th:block>
+    
+   </div> <!-- container-fluid -->
+</body>
+</html>
